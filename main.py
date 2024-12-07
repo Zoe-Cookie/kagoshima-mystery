@@ -12,6 +12,7 @@ from linebot.v3.messaging import (
     Configuration,
     ImageMessage,
     MessagingApi,
+    ReplyMessageRequest,
     TextMessage,
 )
 from linebot.v3.webhooks import MessageEvent, TextMessageContent, UserSource
@@ -106,76 +107,90 @@ def handle_message(event: MessageEvent):
 
         if users_state[user_id] == 0:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text=strings.QUESTION_1),
-                    ImageMessage(
-                        original_content_url=image_to_url("image_1"),
-                        preview_image_url=image_to_url("image_1", is_preview=True),
-                    ),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text=strings.QUESTION_1),
+                        ImageMessage(
+                            original_content_url=image_to_url("image_1"),
+                            preview_image_url=image_to_url("image_1", is_preview=True),
+                        ),
+                    ],
+                )
             )
             users_state[user_id] = 1
         elif users_state[user_id] == 1 and message == strings.ANSWER_1:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text=strings.QUESTION_2),
-                    ImageMessage(
-                        original_content_url=image_to_url("image_2"),
-                        preview_image_url=image_to_url("image_2", is_preview=True),
-                    ),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text=strings.QUESTION_2),
+                        ImageMessage(
+                            original_content_url=image_to_url("image_2"),
+                            preview_image_url=image_to_url("image_2", is_preview=True),
+                        ),
+                    ],
+                )
             )
             users_state[user_id] = 2
         elif users_state[user_id] == 2 and message == strings.ANSWER_2:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text=strings.QUESTION_3),
-                    ImageMessage(
-                        original_content_url=image_to_url("image_3"),
-                        preview_image_url=image_to_url("image_3", is_preview=True),
-                    ),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text=strings.QUESTION_3),
+                        ImageMessage(
+                            original_content_url=image_to_url("image_3"),
+                            preview_image_url=image_to_url("image_3", is_preview=True),
+                        ),
+                    ],
+                )
             )
             users_state[user_id] = 3
         elif users_state[user_id] == 3 and message == strings.ANSWER_3:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text=strings.QUESTION_4),
-                    ImageMessage(
-                        original_content_url=image_to_url("image_4"),
-                        preview_image_url=image_to_url("image_4", is_preview=True),
-                    ),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text=strings.QUESTION_4),
+                        ImageMessage(
+                            original_content_url=image_to_url("image_4"),
+                            preview_image_url=image_to_url("image_4", is_preview=True),
+                        ),
+                    ],
+                )
             )
             users_state[user_id] = 4
         elif users_state[user_id] == 4 and message == strings.ANSWER_4:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text=strings.QUESTION_5),
-                    ImageMessage(
-                        original_content_url=image_to_url("image_5"),
-                        preview_image_url=image_to_url("image_5", is_preview=True),
-                    ),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text=strings.QUESTION_5),
+                        ImageMessage(
+                            original_content_url=image_to_url("image_5"),
+                            preview_image_url=image_to_url("image_5", is_preview=True),
+                        ),
+                    ],
+                )
             )
             users_state[user_id] = 5
         elif users_state[user_id] == 5 and message == strings.ANSWER_5:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text="Congrats!"),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text="Congrats!"),
+                    ],
+                )
             )
             users_state[user_id] = 0
         else:
             api_instance.reply_message(
-                reply_token,
-                message=[
-                    TextMessage(text="Wrong answer!"),
-                ],
+                ReplyMessageRequest(
+                    reply_token,
+                    message=[
+                        TextMessage(text="Wrong answer!"),
+                    ],
+                )
             )
