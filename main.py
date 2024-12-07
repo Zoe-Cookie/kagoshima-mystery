@@ -108,8 +108,8 @@ def handle_message(event: MessageEvent):
         if users_state[user_id] == 0:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text=strings.QUESTION_1),
                         ImageMessage(
                             original_content_url=image_to_url("image_1"),
@@ -122,8 +122,8 @@ def handle_message(event: MessageEvent):
         elif users_state[user_id] == 1 and message == strings.ANSWER_1:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text=strings.QUESTION_2),
                         ImageMessage(
                             original_content_url=image_to_url("image_2"),
@@ -136,8 +136,8 @@ def handle_message(event: MessageEvent):
         elif users_state[user_id] == 2 and message == strings.ANSWER_2:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text=strings.QUESTION_3),
                         ImageMessage(
                             original_content_url=image_to_url("image_3"),
@@ -150,8 +150,8 @@ def handle_message(event: MessageEvent):
         elif users_state[user_id] == 3 and message == strings.ANSWER_3:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text=strings.QUESTION_4),
                         ImageMessage(
                             original_content_url=image_to_url("image_4"),
@@ -164,8 +164,8 @@ def handle_message(event: MessageEvent):
         elif users_state[user_id] == 4 and message == strings.ANSWER_4:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text=strings.QUESTION_5),
                         ImageMessage(
                             original_content_url=image_to_url("image_5"),
@@ -178,8 +178,8 @@ def handle_message(event: MessageEvent):
         elif users_state[user_id] == 5 and message == strings.ANSWER_5:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text="Congrats!"),
                     ],
                 )
@@ -188,8 +188,8 @@ def handle_message(event: MessageEvent):
         else:
             api_instance.reply_message(
                 ReplyMessageRequest(
-                    reply_token,
-                    message=[
+                    replyToken=reply_token,
+                    messages=[
                         TextMessage(text="Wrong answer!"),
                     ],
                 )
