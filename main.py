@@ -56,7 +56,7 @@ def get_image(
     fid: str,
     is_preview: bool = Query(default=False),
 ) -> StreamingResponse:
-    expected_fid = r"^[_0-9a-fA-F]$"
+    expected_fid = r"^[_0-9a-zA-Z]+$"
     if re.fullmatch(expected_fid, fid) is None:
         raise HTTPException(status_code=400, detail="Invalid fid")
 
