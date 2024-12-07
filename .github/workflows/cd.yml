@@ -45,6 +45,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             sudo podman pull ${{ vars.DOCKER_IMAGE }}
-            sudo podman run -d -p ${{ vars.DEPLOY_PORT }}:8000 \
+            sudo podman run -d \
+              -p ${{ vars.DEPLOY_PORT }}:8000 \
+              -e ACCESS_TOKEN=${{ secrets.CHANNEL_ACCESS_TOKEN }} \
+              -e SECRET=${{ secrets.CHANNEL_SECRET }} \
               --name ${{ vars.DEPLOY_CONTAINER }} \
               --replace --restart always ${{ vars.DOCKER_IMAGE }}
