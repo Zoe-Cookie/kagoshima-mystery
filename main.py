@@ -1,3 +1,5 @@
+from io import BytesIO
+import math
 import os
 import re
 
@@ -14,7 +16,6 @@ from linebot.v3.messaging import (
     MessagingApi,
     ReplyMessageRequest,
     TextMessage,
-    UserProfileResponse,
 )
 from linebot.v3.webhooks import MessageEvent, TextMessageContent, UserSource
 from PIL import Image
@@ -48,7 +49,6 @@ async def callback(
     return PlainTextResponse(content="OK")
 
 
-image_cache: dict[str, bytes] = {}
 MAX_PREVIEW_SIZE = 1_000_000  # 1MB
 
 
@@ -62,22 +62,21 @@ def get_image(
         raise HTTPException(status_code=400, detail="Invalid fid")
 
     def iter_file():
-        if fid not in image_cache:
-            with open(f"images/{fid}.jpg", "rb") as f:
-                image_data = f.read()
-            image_cache[fid] = image_data
-        else:
-            image_data = image_cache[fid]
+        path = f"images/{fid}.jpg"
+        with open(path) as f:
+            image = Image.open(f)
+            file_size = os.path.getsize(path)
 
-        if not is_preview or len(image_data) < MAX_PREVIEW_SIZE:
-            yield image_data
-        else:
-            image = Image.open(image_data)
-            rate = MAX_PREVIEW_SIZE / len(image_data)
-            image.thumbnail((int(image.width * rate), int(image.height * rate)))
-            with image.fp as f:
-                while buffer := f.read(4096):
-                    yield buffer
+            image_file = BytesIO()
+            if not is_preview or file_size < MAX_PREVIEW_SIZE:
+                image.save(image_file, format="JPEG")
+            else:
+                rate = math.sqrt(MAX_PREVIEW_SIZE / file_size)
+                image.thumbnail((int(image.width * rate), int(image.height * rate)))
+                image.save(image_file, format="JPEG")
+            
+            image_file.seek(0)
+            yield from image_file
 
     return StreamingResponse(iter_file(), media_type="image/jpeg")
 
