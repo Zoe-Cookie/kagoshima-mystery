@@ -63,20 +63,19 @@ def get_image(
 
     def iter_file():
         path = f"images/{fid}.jpg"
-        with open(path) as f:
-            image = Image.open(f)
-            file_size = os.path.getsize(path)
+        image = Image.open(path)
+        file_size = os.path.getsize(path)
 
-            image_file = BytesIO()
-            if not is_preview or file_size < MAX_PREVIEW_SIZE:
-                image.save(image_file, format="JPEG")
-            else:
-                rate = math.sqrt(MAX_PREVIEW_SIZE / file_size)
-                image.thumbnail((int(image.width * rate), int(image.height * rate)))
-                image.save(image_file, format="JPEG")
-            
-            image_file.seek(0)
-            yield from image_file
+        image_file = BytesIO()
+        if not is_preview or file_size < MAX_PREVIEW_SIZE:
+            image.save(image_file, format="JPEG")
+        else:
+            rate = math.sqrt(MAX_PREVIEW_SIZE / file_size)
+            image.thumbnail((int(image.width * rate), int(image.height * rate)))
+            image.save(image_file, format="JPEG")
+        
+        image_file.seek(0)
+        yield from image_file
 
     return StreamingResponse(iter_file(), media_type="image/jpeg")
 
@@ -137,7 +136,7 @@ def handle_message(event: MessageEvent):
                 )
             )
             users_state[user_id] = 2
-        elif users_state[user_id] == 2 and message == strings.ANSWER_2:
+        elif users_state[user_id] == 2 and message.isalpha() and message.lower() == strings.ANSWER_2:
             api_instance.reply_message(
                 ReplyMessageRequest(
                     replyToken=reply_token,
@@ -167,7 +166,7 @@ def handle_message(event: MessageEvent):
                 )
             )
             users_state[user_id] = 4
-        elif users_state[user_id] == 4 and message == strings.ANSWER_4:
+        elif users_state[user_id] == 4 and message.isalpha() and message.lower() == strings.ANSWER_4:
             api_instance.reply_message(
                 ReplyMessageRequest(
                     replyToken=reply_token,
