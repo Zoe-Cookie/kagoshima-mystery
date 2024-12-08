@@ -61,19 +61,23 @@ def get_image(
     if re.fullmatch(expected_fid, fid) is None:
         raise HTTPException(status_code=400, detail="Invalid fid")
 
-    def iter_file():
-        path = f"images/{fid}.jpg"
-        image = Image.open(path)
-        file_size = os.path.getsize(path)
+    path = f"images/{fid}.jpg"
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Image not found")
+    file_size = os.path.getsize(f"images/{fid}.jpg")
 
+    def iter_file():
         image_file = BytesIO()
-        if not is_preview or file_size < MAX_PREVIEW_SIZE:
-            image.save(image_file, format="JPEG")
-        else:
-            rate = math.sqrt(MAX_PREVIEW_SIZE / file_size)
-            image.thumbnail((int(image.width * rate), int(image.height * rate)))
-            image.save(image_file, format="JPEG")
-        
+
+        with open(path, "rb") as f:
+            if not is_preview or file_size < MAX_PREVIEW_SIZE:
+                image_file.write(f.read())
+            else:
+                image = Image.open(f)
+                rate = math.sqrt(MAX_PREVIEW_SIZE / file_size)
+                image.thumbnail((int(image.width * rate), int(image.height * rate)))
+                image.save(image_file, format="JPEG")
+            
         image_file.seek(0)
         yield from image_file
 
