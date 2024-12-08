@@ -14,6 +14,7 @@ from linebot.v3.messaging import (
     MessagingApi,
     ReplyMessageRequest,
     TextMessage,
+    UserProfileResponse,
 )
 from linebot.v3.webhooks import MessageEvent, TextMessageContent, UserSource
 from PIL import Image
@@ -98,6 +99,9 @@ def handle_message(event: MessageEvent):
         user_id = event.source.user_id
         if user_id not in users_state:
             users_state[user_id] = 0
+        
+        profile = api_instance.get_profile(user_id)
+        user_name = profile.display_name
 
         if not isinstance(event.message, TextMessageContent):
             return
@@ -124,6 +128,7 @@ def handle_message(event: MessageEvent):
                 ReplyMessageRequest(
                     replyToken=reply_token,
                     messages=[
+                        TextMessage(text=strings.RESPONSE_1 % (user_name)),
                         TextMessage(text=strings.QUESTION_2),
                         ImageMessage(
                             original_content_url=image_to_url("image_2"),
@@ -138,6 +143,7 @@ def handle_message(event: MessageEvent):
                 ReplyMessageRequest(
                     replyToken=reply_token,
                     messages=[
+                        TextMessage(text=strings.RESPONSE_2 % (user_name)),
                         TextMessage(text=strings.QUESTION_3),
                         ImageMessage(
                             original_content_url=image_to_url("image_3"),
@@ -152,6 +158,7 @@ def handle_message(event: MessageEvent):
                 ReplyMessageRequest(
                     replyToken=reply_token,
                     messages=[
+                        TextMessage(text=strings.RESPONSE_3),
                         TextMessage(text=strings.QUESTION_4),
                         ImageMessage(
                             original_content_url=image_to_url("image_4"),
@@ -166,6 +173,7 @@ def handle_message(event: MessageEvent):
                 ReplyMessageRequest(
                     replyToken=reply_token,
                     messages=[
+                        TextMessage(text=strings.RESPONSE_4 % (user_name)),
                         TextMessage(text=strings.QUESTION_5),
                         ImageMessage(
                             original_content_url=image_to_url("image_5"),
@@ -180,7 +188,8 @@ def handle_message(event: MessageEvent):
                 ReplyMessageRequest(
                     replyToken=reply_token,
                     messages=[
-                        TextMessage(text="Congrats!"),
+                        TextMessage(text=strings.RESPONSE_5 % (user_name)),
+                        TextMessage(text=strings.ENDING),
                     ],
                 )
             )
@@ -190,7 +199,7 @@ def handle_message(event: MessageEvent):
                 ReplyMessageRequest(
                     replyToken=reply_token,
                     messages=[
-                        TextMessage(text="Wrong answer!"),
+                        TextMessage(text="不對喔!請再想想看～"),
                     ],
                 )
             )
